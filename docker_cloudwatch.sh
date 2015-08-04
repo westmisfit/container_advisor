@@ -5,8 +5,8 @@ set -e
 now=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
 
 for id in `docker ps --no-trunc -q`; do
-    name=$(docker inspect -f '{{ .Name }}' $id)
-    name="$(hostname)_${name:1}_used_memory"
+    container_name=$(docker inspect -f '{{ .Name }}' $id)
+    metric_name="$(hostname)_${container_name:1}_used_memory_MB"
 
     ##
     # Control groups
@@ -57,7 +57,7 @@ for id in `docker ps --no-trunc -q`; do
     # Terabytes/Second | Bits/Second | Kilobits/Second | Megabits/Second | 
     # Gigabits/Second | Terabits/Second | Count/Second | None
     ##
-    aws cloudwatch put-metric-data --metric-name "$name" --namespace "Docker" --value "$mem" --timestamp "$now" --unit "Megabytes"
+    aws cloudwatch put-metric-data --metric-name "$metric_name" --namespace "Docker" --value "$mem" --timestamp "$now" --unit "Megabytes"
 done
 
 echo "last updated: $now"
