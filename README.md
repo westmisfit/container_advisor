@@ -5,16 +5,16 @@ monitor docker container's mem + cpu + io, post data to aws cloudwatch
 
 # How to use
 
-## pre-install:
+## Install awscli
 
-### For ubuntu:
+### For ubuntu
 
 ```shell
 sudo apt-get install awscli -y
 aws configure # input your access_key and secret_key
 ```
 
-### For amazon-linux:
+### For amazon-linux
 
 ```shell
 curl -O https://bootstrap.pypa.io/get-pip.py
@@ -29,13 +29,13 @@ aws configure # input your access_key and secret_key
 ```
 
 
-## download script
+## Download collect data script
 ```shell
 curl https://raw.githubusercontent.com/westmisfit/container_advisor/master/docker_cloudwatch.sh | sudo tee /usr/local/bin/docker_cloudwatch.sh
 sudo chmod +x /usr/local/bin/docker_cloudwatch.sh
 ```
 
-## execute script every 1 minute
+## Add corn task, collect data every 1 minute
 ```shell
 echo "*/1 * * * * $USER /usr/local/bin/docker_cloudwatch.sh >$HOME/docker_cloudwatch.log 2>&1" | sudo tee /etc/cron.d/docker_cloudwatch
 ```
