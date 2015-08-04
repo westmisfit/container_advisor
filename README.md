@@ -37,5 +37,5 @@ sudo chmod +x /usr/local/bin/docker_cloudwatch.sh
 
 ## execute script every 1 minute
 ```shell
-echo "*/1 * * * * ubuntu /usr/local/bin/docker_cloudwatch.sh >/home/ubuntu/docker_cloudwatch.log 2>&1" | sudo tee /etc/cron.d/docker_cloudwatch
+echo "*/1 * * * * $USER /usr/local/bin/docker_cloudwatch.sh >$HOME/docker_cloudwatch.log 2>&1" | sudo tee /etc/cron.d/docker_cloudwatch
 ```
