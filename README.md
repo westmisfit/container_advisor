@@ -22,7 +22,7 @@ sudo python27 get-pip.py
 sudo ln -s /usr/local/bin/pip /usr/bin/pip
 rm get-pip.py
 
-sudo pip install awscli -y
+sudo pip install awscli
 sudo ln -s /usr/local/bin/aws /usr/bin/aws
 
 aws configure # input your access_key and secret_key
