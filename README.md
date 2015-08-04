@@ -6,10 +6,28 @@ monitor docker container's mem + cpu + io, post data to aws cloudwatch
 # How to use
 
 ## pre-install:
+
+### For ubuntu:
+
 ```shell
 sudo apt-get install awscli -y
 aws configure # input your access_key and secret_key
 ```
+
+### For amazon-linux:
+
+```shell
+curl -O https://bootstrap.pypa.io/get-pip.py
+sudo python27 get-pip.py
+sudo ln -s /usr/local/bin/pip /usr/bin/pip
+rm get-pip.py
+
+sudo pip install awscli -y
+sudo ln -s /usr/local/bin/aws /usr/bin/aws
+
+aws configure # input your access_key and secret_key
+```
+
 
 ## download script
 ```shell
