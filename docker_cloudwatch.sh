@@ -42,7 +42,22 @@ for id in `docker ps --no-trunc -q`; do
     fi
 
     mem=$(cat $memstat | awk '$1=="active_anon" { printf "%.2f \n", $2/1024/1024 }')
-    aws cloudwatch put-metric-data --metric-name "$name" --namespace "Docker" --value "$mem" --timestamp "$now" --unit "MB"
+
+    ##
+    # Unit
+    #
+    # The unit of the metric.
+    #
+    # Type: String
+    # 
+    # Valid Values: Seconds | Microseconds | Milliseconds | Bytes | 
+    # Kilobytes | Megabytes | Gigabytes | Terabytes | Bits | Kilobits | 
+    # Megabits | Gigabits | Terabits | Percent | Count | Bytes/Second | 
+    # Kilobytes/Second | Megabytes/Second | Gigabytes/Second | 
+    # Terabytes/Second | Bits/Second | Kilobits/Second | Megabits/Second | 
+    # Gigabits/Second | Terabits/Second | Count/Second | None
+    ##
+    aws cloudwatch put-metric-data --metric-name "$name" --namespace "Docker" --value "$mem" --timestamp "$now" --unit "Megabytes"
 done
 
 echo "last updated: $now"
