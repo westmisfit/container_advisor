@@ -50,7 +50,7 @@ curl https://raw.githubusercontent.com/westmisfit/container_advisor/master/docke
 sudo chmod +x /usr/local/bin/docker_cloudwatch.sh
 ```
 
-### Download special version of collect data script
+**special version**
 
 ```shell
 version_tag=v0.1
