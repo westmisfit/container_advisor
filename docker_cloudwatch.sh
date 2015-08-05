@@ -81,9 +81,10 @@ for id in `docker ps --no-trunc -q`; do
 done
 
 metric_data="$metric_data]"
-
-aws cloudwatch put-metric-data --namespace "ECS Custom" --metric-data "$metric_data"
 # echo $metric_data
 
+if [[ $counter -gt 0 ]]; then
+    aws cloudwatch put-metric-data --namespace "ECS Custom" --metric-data "$metric_data"
+fi
 
 echo "last updated: $now"
