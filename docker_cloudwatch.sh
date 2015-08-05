@@ -75,7 +75,7 @@ for id in `docker ps --no-trunc -q`; do
       {\"Name\": \"ECSTaskFamily\",\"Value\": \"$ecs_task_family\"}
     ],
     \"Value\": $mem,
-    \"Unit\": \"Megabits\"
+    \"Unit\": \"Megabytes\"
   }"
 done
 
