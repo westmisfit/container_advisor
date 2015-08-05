@@ -45,6 +45,8 @@ for id in `docker ps --no-trunc -q`; do
     ecs_container_name=$(docker inspect -f '{{ index .Config.Labels "com.amazonaws.ecs.container-name" }}' $id)
     ecs_task_family=$(docker inspect -f '{{ index .Config.Labels "com.amazonaws.ecs.task-definition-family" }}' $id)
 
+    if [[ "$ecs_container_name" = "" ]] || [[ "$ecs_container_name" = "<no value>" ]]; then continue; fi
+
     memstat="$cgroup/memory/docker/$id/memory.stat"
     mem=$(cat $memstat | awk '$1=="active_anon" { printf "%.2f \n", $2/1024/1024 }')
 
@@ -70,7 +72,6 @@ for id in `docker ps --no-trunc -q`; do
     \"Dimensions\": [
       {\"Name\": \"InstanceId\",\"Value\": \"$instance_id\"},
       {\"Name\": \"ImageName\",\"Value\": \"$image_name\"},
-      {\"Name\": \"ContainerName\",\"Value\": \"$container_name\"},
       {\"Name\": \"ECSContainerName\",\"Value\": \"$ecs_container_name\"},
       {\"Name\": \"ECSTaskFamily\",\"Value\": \"$ecs_task_family\"}
     ],
