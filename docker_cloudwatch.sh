@@ -35,6 +35,8 @@ fi
 
 now=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
 instance_id=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
+mechine_mem=$(cat /proc/meminfo | awk '$1=="MemTotal:" {print $2*1024}')
+# echo mechine_mem=$mechine_mem
 metric_data="["
 
 count=0
@@ -47,10 +49,26 @@ for id in `docker ps --no-trunc -q`; do
 
     if [[ "$ecs_container_name" = "" ]] || [[ "$ecs_container_name" = "<no value>" ]]; then continue; fi
 
-    memstat="$cgroup/memory/docker/$id/memory.stat"
-    mem=$(cat $memstat | awk '$1=="active_anon" { printf "%.2f \n", $2/1024/1024 }')
+    # memory
+    mem_path="$cgroup/memory/docker/$id"
+    mem_usage=$(cat $mem_path/memory.usage_in_bytes)
+    mem_usage_MB=$(echo $mem_usage | awk '{printf "%.2f", $1/1024/1024}')
+    # mem_max_usage=$(cat $mem_path/memory.max_usage_in_bytes)
+    # mem_max_usage_MB=$(echo $mem_max_usage | awk '{printf "%.2f", $1/1024/1024}')
+    mem_limit=$(cat $mem_path/memory.limit_in_bytes)
+    if [[ $mem_limit -gt $mechine_mem ]]; then
+        mem_limit=$mechine_mem
+    fi
+    # echo mem_limit=$mem_limit
+    mem_usage_percent=$(echo "$mem_usage" "$mem_limit" | awk '{printf "%.2f", $1/$2*100}')
 
-    if [[ $counter -gt 0 ]]; then metric_data="$metric_data,"; fi
+    # cpu
+    # cpu_path="$cgroup/cpu/docker/$id"
+
+    # counter
+    if [[ $counter -gt 0 ]]; then
+        metric_data="$metric_data,"
+    fi
     counter=$((counter+1))
 
     ##
@@ -68,15 +86,25 @@ for id in `docker ps --no-trunc -q`; do
     # Gigabits/Second | Terabits/Second | Count/Second | None
     ##
     metric_data="$metric_data{
-    \"MetricName\": \"UsedMemory\",
+    \"MetricName\": \"MemoryUsage\",
     \"Dimensions\": [
       {\"Name\": \"InstanceId\",\"Value\": \"$instance_id\"},
       {\"Name\": \"ImageName\",\"Value\": \"$image_name\"},
       {\"Name\": \"ECSContainerName\",\"Value\": \"$ecs_container_name\"},
       {\"Name\": \"ECSTaskFamily\",\"Value\": \"$ecs_task_family\"}
     ],
-    \"Value\": $mem,
+    \"Value\": $mem_usage_MB,
     \"Unit\": \"Megabytes\"
+  },{
+    \"MetricName\": \"MemoryUsagePercent\",
+    \"Dimensions\": [
+      {\"Name\": \"InstanceId\",\"Value\": \"$instance_id\"},
+      {\"Name\": \"ImageName\",\"Value\": \"$image_name\"},
+      {\"Name\": \"ECSContainerName\",\"Value\": \"$ecs_container_name\"},
+      {\"Name\": \"ECSTaskFamily\",\"Value\": \"$ecs_task_family\"}
+    ],
+    \"Value\": $mem_usage_percent,
+    \"Unit\": \"Percent\"
   }"
 done
 
