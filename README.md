@@ -5,6 +5,20 @@ monitor docker container's mem + cpu + io, post data to aws cloudwatch
 
 # How to use
 
+## Install wget
+
+### For ubuntu
+
+```shell
+sudo apt-get install wget -y
+```
+
+### For amazon-linux
+
+```shell
+sudo yum install wget -y
+```
+
 ## Install awscli
 
 ### For ubuntu
