@@ -81,7 +81,7 @@ done
 
 metric_data="$metric_data]"
 
-aws cloudwatch put-metric-data --namespace "ECS" --metric-data "$metric_data"
+aws cloudwatch put-metric-data --namespace "ECS Custom" --metric-data "$metric_data"
 # echo $metric_data
 
 
