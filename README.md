@@ -44,12 +44,22 @@ aws configure # input your access_key and secret_key
 
 
 ## Download collect data script
+
 ```shell
 curl https://raw.githubusercontent.com/westmisfit/container_advisor/master/docker_cloudwatch.sh | sudo tee /usr/local/bin/docker_cloudwatch.sh
 sudo chmod +x /usr/local/bin/docker_cloudwatch.sh
 ```
 
+### Download special version of collect data script
+
+```shell
+version_tag=v0.1
+curl https://raw.githubusercontent.com/westmisfit/container_advisor/$version_tag/docker_cloudwatch.sh | sudo tee /usr/local/bin/docker_cloudwatch.sh
+sudo chmod +x /usr/local/bin/docker_cloudwatch.sh
+```
+
 ## Add corn task, collect data every 1 minute
+
 ```shell
 echo "*/1 * * * * $USER /usr/local/bin/docker_cloudwatch.sh >$HOME/docker_cloudwatch.log 2>&1" | sudo tee /etc/cron.d/docker_cloudwatch
 ```
