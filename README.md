@@ -1,6 +1,6 @@
 # container_advisor
 
-monitor docker container's mem + cpu + io, post data to aws cloudwatch
+put container stats to cloudwatch
 
 
 # How to use
